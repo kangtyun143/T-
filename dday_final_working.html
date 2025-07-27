@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>디데이 계산기</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: #f0f4f8;
+      color: #222;
+    }
+    h2 {
+      margin-bottom: 15px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    input[type=number] {
+      width: 90px;
+      font-size: 18px;
+      padding: 8px 12px;
+      margin: 0 8px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    input[type=number]:focus {
+      border-color: #0078d4;
+      outline: none;
+    }
+    button {
+      padding: 10px 28px;
+      font-size: 18px;
+      border: none;
+      background-color: #0078d4;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 3px 7px rgba(0,120,212,0.4);
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+    #result {
+      margin-top: 40px;
+      font-size: 36px;
+      font-weight: 700;
+      color: #004080;
+      min-height: 50px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>이 웹사이트는 디데이를 확인할 수 있는 웹사이트입니다.</h2>
+  <div class="input-group">
+    <input type="number" id="year" placeholder="년" min="1900" max="3000" />
+    <input type="number" id="month" placeholder="월" min="1" max="12" />
+    <input type="number" id="day" placeholder="일" min="1" max="31" />
+  </div>
+  <button id="submitBtn">확인</button>
+
+  <div id="result">여기에 결과가 표시됩니다.</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("submitBtn").addEventListener("click", function() {
+        const yearField = document.getElementById('year');
+        const monthField = document.getElementById('month');
+        const dayField = document.getElementById('day');
+        const resultDiv = document.getElementById('result');
+
+        const year = parseInt(yearField.value);
+        const month = parseInt(monthField.value);
+        const day = parseInt(dayField.value);
+
+        if (isNaN(year) || isNaN(month) || isNaN(day)) {
+          resultDiv.textContent = "년, 월, 일을 정확히 입력해주세요.";
+          resultDiv.style.color = 'red';
+          return;
+        }
+
+        const inputDate = new Date(year, month - 1, day);
+        if (
+          inputDate.getFullYear() !== year ||
+          inputDate.getMonth() !== month - 1 ||
+          inputDate.getDate() !== day
+        ) {
+          resultDiv.textContent = "존재하지 않는 날짜입니다.";
+          resultDiv.style.color = 'red';
+          return;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const diffTime = inputDate - today;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+          resultDiv.textContent = "오늘입니다! 🎉";
+          resultDiv.style.color = '#0078d4';
+        } else if (diffDays > 0) {
+          resultDiv.textContent = `D-${diffDays}일 남았습니다.`;
+          resultDiv.style.color = '#1a73e8';
+        } else {
+          resultDiv.textContent = `D+${-diffDays}일 지났습니다.`;
+          resultDiv.style.color = '#d14343';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
